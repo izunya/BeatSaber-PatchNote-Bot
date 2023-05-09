@@ -20,3 +20,14 @@ npm run server
 npm run start
 node index.js
 ```
+
+## Commands
+
+```Chat
+p!phs - Sending patchnote to Message channel
+
+/ps - Sending patchnote to Interaction channel
+
+/psw - Sending patchnote to Webhooks channel
+
+```
