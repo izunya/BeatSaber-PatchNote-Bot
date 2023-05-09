@@ -39,3 +39,12 @@ p!phs - Sending patchnote to Message channel
 /psw - Sending patchnote to Webhooks channel
 
 ```
+
+## Config
+```javascript
+module.exports = {
+    ownerID: "380629788940959746", // Change to your ID
+    prefix: ["p!"], // Prefix
+    izuna: "Created By. Izuna_1", // Do not change :/
+}
+```
