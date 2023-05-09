@@ -1,0 +1,8 @@
+dist
+node_modules
+package-lock.json
+nohup.out
+.vscode
+.DS_Store
+config.json
+.env
