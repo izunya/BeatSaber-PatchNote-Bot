@@ -1,6 +1,5 @@
 const client = require('../../index.js')
 const Discord = require('discord.js');
-const fs = require('fs')
 module.exports = {
     name: 'ready'
 }

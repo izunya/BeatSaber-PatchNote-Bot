@@ -1,7 +1,5 @@
 const client = require('../../../index.js');
 const Discord = require('discord.js');
-const axios = require('axios')
-const fs = require('fs');
 const {rlw} = require('../../../Interface/Builder.js')
 
 module.exports = {

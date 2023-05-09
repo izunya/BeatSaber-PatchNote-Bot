@@ -1,13 +1,11 @@
 const { Client, Collection, Partials, IntentsBitField, EmbedBuilder, WebhookClient } = require('discord.js')
 const { scheduleJob, RecurrenceRule, Range } = require('node-schedule');
-const fs = require('fs');
-const axios = require('axios')
 require('dotenv').config()
 if (process.env.TOKEN == undefined || process.env.WEBHOOKS == undefined) {
     throw new Error('TOKEN OR WEBHOOKS is not defined in .env file')
 }
 
-const { str, rlw } = require('./Interface/Builder.js')
+const { rlw } = require('./Interface/Builder.js')
 
 const client = new Client({
     intents: [99999, IntentsBitField.Flags.GuildPresences], partials: [Partials.Channel, Partials.GuildMember, Partials.Message, Partials.Reaction, Partials.User, Partials.GuildScheduledEvent, Partials.ThreadMember]
@@ -28,7 +26,6 @@ RRl.tz = 'Asia/Seoul'
 scheduleJob(RRl, async function () {
     await rlw()
 })
-
 
 
 require('./handler')(client);
