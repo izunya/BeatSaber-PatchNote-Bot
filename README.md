@@ -21,6 +21,14 @@ npm run start
 node index.js
 ```
 
+## Events
+
+When you first run the bot, it automatically sends patch notes.
+Every hour and 00 minutes, it checks to see if new patch notes exist, and if so, it sends them.
+
+처음 봇을 실행시키면 자동으로 패치노트를 전송합니다.
+매시간 00분 마다 새로운 패치노트가 존재하는지 확인 후 , 존재한다면 해당 패치노트를 전송합니다.
+
 ## Commands
 
 ```Chat
