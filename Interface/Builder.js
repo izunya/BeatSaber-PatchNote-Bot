@@ -5,21 +5,24 @@ const fs = require('fs');
 require('dotenv').config()
 
 async function str(contents) {
+    const ytRegex = /previewyoutube=([^;]+)/;
+    const ytURL = ytRegex.exec(contents)[1]
     const res = contents
         .replace(/\[img\]({STEAM_CLAN_IMAGE}\/\d+\/[a-f\d]+\.(?:gif|jpg|jpeg|png))\[\/img\]/, '\n')
-        .replace(/\[img\]|\[\/img\]|\[list\]|\[\/list\]/g, '')
+        .replace(/\[img\]|\[\/img\]|\[list\]|\[\/list\]|\[u\]|\[\/u\]/g, '')
         .replace(/\[\*\]/g, '')
         .replace(/\n\n/g, '\n')
-        .replace(/\[(\/)?b\]/g, '');
+        .replace(/\[(\/)?b\]/g, '')
+        .replace(/\[previewyoutube=([^\]]+);full\]\[\/previewyoutube\]/, `https://youtu.be/${ytURL}`);
     return res;
 }
 
 const webhookClient = new Discord.WebhookClient({ url: process.env.WEBHOOKS })
-
+const url = 'https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?access_token=2a1724406dcee2de5f5412077343662c&appid=620980&count=1&feeds=steam_community_announcements'
 async function rlw() {
     axios({
         method: 'get',
-        url: 'https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?access_token=2a1724406dcee2de5f5412077343662c&appid=620980&count=1&tags=patchnotes',
+        url: url,
         responseType: 'json'
     }).then(async (response) => {
         const res = response.data.appnews.newsitems[0]
@@ -47,7 +50,7 @@ async function rlw() {
 
 async function rl() {
     try{
-        const response = await axios.get('https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?access_token=2a1724406dcee2de5f5412077343662c&appid=620980&count=1&tags=patchnotes')
+        const response = await axios.get(url)
         const res = response.data.appnews.newsitems[0]
         const sts = await str(res.contents)
         const imageRegex = /\[img\]({STEAM_CLAN_IMAGE}\/\d+\/[a-f\d]+\.(?:gif|jpg|jpeg|png))\[\/img\]/;
