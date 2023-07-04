@@ -46,7 +46,7 @@ async function rlw() {
             const button = new Discord.ButtonBuilder()
             button.setLabel('Youtube')
             button.setStyle(Discord.ButtonStyle.Link)
-            button.setURL(`https://youtu.be/${youtubeURLURL}`)
+            button.setURL(`https://youtu.be/${youtubeURL}`)
             const youtube = new Discord.ActionRowBuilder().addComponents([button])
             return webhookClient.send({
                 username: 'Patch Note',
