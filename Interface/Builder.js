@@ -4,19 +4,16 @@ const axios = require('axios')
 const fs = require('fs');
 require('dotenv').config()
 
-let youtubeURL = null
-
 async function str(contents) {
     const ytRegex = /previewyoutube=([^;]+)/;
     const ytURL = ytRegex.exec(contents)[1]
-    youtubeURL = ytURL
     const res = contents
         .replace(/\[img\]({STEAM_CLAN_IMAGE}\/\d+\/[a-f\d]+\.(?:gif|jpg|jpeg|png))\[\/img\]/, '\n')
         .replace(/\[img\]|\[\/img\]|\[list\]|\[\/list\]|\[u\]|\[\/u\]/g, '')
         .replace(/\[\*\]/g, '')
         .replace(/\n\n/g, '\n')
         .replace(/\[(\/)?b\]/g, '')
-        .replace(/\[previewyoutube=([^\]]+);full\]\[\/previewyoutube\]/, ``);
+        .replace(/\[previewyoutube=([^\]]+);full\]\[\/previewyoutube\]/, `https://youtu.be/${ytURL}`);
     return res;
 }
 
@@ -42,18 +39,6 @@ async function rlw() {
         embed.setDescription(sts)
         embed.setFooter({ text: 'BSPN' })
         embed.setTimestamp(parseInt(res.date) * 1000)
-        if(youtubeURL){
-            const button = new Discord.ButtonBuilder()
-            button.setLabel('Youtube')
-            button.setStyle(Discord.ButtonStyle.Link)
-            button.setURL(`https://youtu.be/${youtubeURL}`)
-            const youtube = new Discord.ActionRowBuilder().addComponents([button])
-            return webhookClient.send({
-                username: 'Patch Note',
-                embeds: [embed],
-                components: [youtube]
-            })
-        }
         webhookClient.send({
             username: 'Patch Note',
             embeds: [embed]
@@ -80,14 +65,6 @@ async function rl(message) {
         embed.setDescription(sts)
         embed.setFooter({ text: 'BSPN' })
         embed.setTimestamp(parseInt(res.date) * 1000)
-        if(youtubeURL){
-            const button = new Discord.ButtonBuilder()
-            button.setLabel('Youtube')
-            button.setStyle(Discord.ButtonStyle.Link)
-            button.setURL(`https://youtu.be/${youtubeURL}`)
-            const youtube = new Discord.ActionRowBuilder().addComponents([button])
-            return message.reply({ embeds: [embed], components: [youtube] })
-        }
         message.reply({ embeds: [embed] })
         return;
     }catch(error){
