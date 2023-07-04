@@ -5,15 +5,13 @@ const fs = require('fs');
 require('dotenv').config()
 
 async function str(contents) {
-    const ytRegex = /previewyoutube=([^;]+)/;
-    const ytURL = ytRegex.exec(contents)[1]
     const res = contents
         .replace(/\[img\]({STEAM_CLAN_IMAGE}\/\d+\/[a-f\d]+\.(?:gif|jpg|jpeg|png))\[\/img\]/, '\n')
         .replace(/\[img\]|\[\/img\]|\[list\]|\[\/list\]|\[u\]|\[\/u\]/g, '')
         .replace(/\[\*\]/g, '')
         .replace(/\n\n/g, '\n')
         .replace(/\[(\/)?b\]/g, '')
-        .replace(/\[previewyoutube=([^\]]+);full\]\[\/previewyoutube\]/, `https://youtu.be/${ytURL}`);
+        .replace(/\[previewyoutube=([^\]]+);full\]\[\/previewyoutube\]/, ``);
     return res;
 }
 
@@ -27,6 +25,8 @@ async function rlw() {
     }).then(async (response) => {
         const res = response.data.appnews.newsitems[0]
         const sts = await str(res.contents)
+        const ytRegex = /previewyoutube=([^;]+)/;
+        const ytURL = ytRegex.exec(contents)[1]
         const embed = new Discord.EmbedBuilder()
         const imageRegex = /\[img\]({STEAM_CLAN_IMAGE}\/\d+\/[a-f\d]+\.(?:gif|jpg|jpeg|png))\[\/img\]/;
         const imageURL = imageRegex.exec(res.contents)[1]?.replace('{STEAM_CLAN_IMAGE}', 'https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/clans/')
@@ -39,6 +39,19 @@ async function rlw() {
         embed.setDescription(sts)
         embed.setFooter({ text: 'BSPN' })
         embed.setTimestamp(parseInt(res.date) * 1000)
+        if(ytURL){
+            const button = new Discord.ButtonBuilder()
+            button.setLabel('Youtube')
+            button.setStyle(Discord.ButtonStyle.Link)
+            button.setURL(`https://youtu.be/${ytURL}`)
+
+            const youtube = new Discord.ActionRowBuilder().addComponents([button])
+            return webhookClient.send({
+                username: 'Patch Note',
+                embeds: [embed],
+                components: [youtube]
+            })
+        }
         webhookClient.send({
             username: 'Patch Note',
             embeds: [embed]
@@ -48,13 +61,15 @@ async function rlw() {
     })
 }
 
-async function rl() {
+async function rl(message) {
     try{
         const response = await axios.get(url)
         const res = response.data.appnews.newsitems[0]
         const sts = await str(res.contents)
         const imageRegex = /\[img\]({STEAM_CLAN_IMAGE}\/\d+\/[a-f\d]+\.(?:gif|jpg|jpeg|png))\[\/img\]/;
         const imageURL = imageRegex.exec(res.contents)[1]?.replace('{STEAM_CLAN_IMAGE}', 'https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/clans/')
+        const ytRegex = /previewyoutube=([^;]+)/;
+        const ytURL = ytRegex.exec(contents)[1]
         // const dates = fs.readFileSync('./res.txt', { encoding: 'utf-8' })
         // if (dates == res.date) return;
         // fs.writeFileSync('./res.txt', `${res.date}`, { encoding: 'utf8' })
@@ -65,7 +80,17 @@ async function rl() {
         embed.setDescription(sts)
         embed.setFooter({ text: 'BSPN' })
         embed.setTimestamp(parseInt(res.date) * 1000)
-        return embed
+        if(ytURL){
+            const button = new Discord.ButtonBuilder()
+            button.setLabel('Youtube')
+            button.setStyle(Discord.ButtonStyle.Link)
+            button.setURL(`https://youtu.be/${ytURL}`)
+
+            const youtube = new Discord.ActionRowBuilder().addComponents([button])
+            return message.channel.send({ embeds: [embed], components: [youtube] })
+        }
+        message.channel.send({ embeds: [embed] })
+        return;
     }catch(error){
         console.error(error);
     }

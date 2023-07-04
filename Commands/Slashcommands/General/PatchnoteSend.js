@@ -12,6 +12,6 @@ module.exports = {
         **/
     run: async (client, interaction, args) => {
         if (interaction.user.id != client.config.ownerID) return;
-        await interaction.reply({embeds:[await rl()]})
+        await rl(interaction)
     }
 }
